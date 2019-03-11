@@ -24,14 +24,25 @@ public class Servidor {
 		
 	}
 
-	private void executa() throws IOException {
+	private void executa() {
 
-		servidor = new ServerSocket(this.porta);
+		try {
+			servidor = new ServerSocket(this.porta);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Porta 27289 aberta");
 
 		while (true) {
 			// aceita um cliente
-			Socket cliente = servidor.accept();
+			Socket cliente = null;
+			try {
+				cliente = servidor.accept();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
 			// adiciona  o cliente a uma lista
@@ -40,7 +51,13 @@ public class Servidor {
 
 			// cria tratador de cliente numa nova thread
 
-			TrataCliente tc = new TrataCliente(cliente.getInputStream(), this);
+			TrataCliente tc = null;
+			try {
+				tc = new TrataCliente(cliente.getInputStream(), this);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			new Thread(tc).start();
 
 		}
@@ -53,7 +70,7 @@ public class Servidor {
 		for (Socket cliente : this.listaClientes) {
 			try {
 				new PrintStream(cliente.getOutputStream()).println(cliente.getInetAddress().getHostAddress() + msg);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

@@ -3,7 +3,6 @@ package br.com.giovanildo.main;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 
@@ -25,20 +24,14 @@ public class Cliente {
 	
 	public void executa() {
 		
-		ping();
+		//ping();
 		
 		try {
 			cliente = new Socket(this.host, this.porta);
-		} catch (UnknownHostException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-            //when thread is finishing for whatever reason, closes socket
-            System.out.println(Thread.currentThread().getName() + " out finished");
-		}
+		} 
 		
 		
 		System.out.println("O cliente se conectou ao servidor!");
@@ -48,12 +41,9 @@ public class Cliente {
 		try {
 			r = new Recebedor(cliente.getInputStream());
 			new Thread(r).start();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-            //when thread is finishing for whatever reason, closes socket
-            System.out.println(Thread.currentThread().getName() + " out finished");
 		}
 		
 		
@@ -62,13 +52,10 @@ public class Cliente {
 		PrintStream saida = null;
 		try {
 			saida = new PrintStream(cliente.getOutputStream());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-            //when thread is finishing for whatever reason, closes socket
-            System.out.println(Thread.currentThread().getName() + " out finished");
-		}
+		} 
 		
 		while(teclado.hasNextLine()) {
 			saida.println(teclado.nextLine());
@@ -82,9 +69,7 @@ public class Cliente {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			 System.out.println(Thread.currentThread().getName() + " out finished");
-		}
+		} 
 	}
 
 	private void ping() {
@@ -103,5 +88,4 @@ public class Cliente {
 		});
 		t.start();
 	}
-
 }
